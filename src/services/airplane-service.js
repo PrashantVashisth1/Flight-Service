@@ -16,10 +16,59 @@ async function createAirplane(data) {
       })      
       throw new AppError(explanation, StatusCodes.BAD_REQUEST);
     }
-    throw new AppError('Something Went Wrong', StatusCodes.INTERNAL_SERVER_ERROR);
+    throw new AppError('Cannot create a new airplane object', StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+}
+
+async function getAirplanes() {
+  try {
+    const airplanes = await airplaneRepository.getAll();
+    return airplanes;
+  } catch (error) {
+    throw new AppError('Cannot fetch data of all airplanes', StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+}
+
+async function getAirplane(id) {
+  try {
+    const airplane = await airplaneRepository.get(id);
+    return airplane;
+  } catch (error) {
+    if(error.statusCode === StatusCodes.NOT_FOUND) {
+      throw new AppError('The airplane you requested is not present', error.statusCode);
+    }
+    throw new AppError('Cannot fetch data of the specific airplane', StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+}
+
+async function destroyAirplane(id) {
+  try {
+    const response = await airplaneRepository.destroy(id);
+    return response;
+  } catch (error) {
+    if(error.statusCode === StatusCodes.NOT_FOUND) {
+      throw new AppError('The airplane you requested to delete is not present', error.statusCode);
+    }
+    throw new AppError('Cannot fetch data of all airplanes', StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+}
+
+async function updateAirplane(id, data) {
+  try {
+    const response = await airplaneRepository.update(id, data);
+    return response;
+  } catch (error) {
+    if(error.statusCode === StatusCodes.NOT_FOUND) {
+      throw new AppError('The airplane you requested to update is not present', error.statusCode);
+    }
+    throw new AppError('Cannot fetch data of all airplanes', StatusCodes.INTERNAL_SERVER_ERROR);
   }
 }
 
 module.exports = {
-  createAirplane  
+  createAirplane,
+  getAirplanes,
+  getAirplane,
+  destroyAirplane,
+  updateAirplane
 }
