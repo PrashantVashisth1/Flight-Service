@@ -27,7 +27,7 @@ async function createFlight(data) {
 
 async function getAllFlights(query) {
   let customFilter = {};
-  let sortFilter = {};
+  let sortFilter = [];
   const endingTripTime = " 23:59:00";
   // trips=MUM-DEL
   if (query.trips) {
